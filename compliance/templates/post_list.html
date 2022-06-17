@@ -1,0 +1,108 @@
+{% extends 'baseadmin.html' %}
+
+{% block title %} - 项目列表{% endblock title %}
+
+{% block content %}
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>项目列表</h1>
+          </div>
+            <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item">
+                  <a  href="/new_post/">
+                     <button type="button" class="btn btn-block btn-outline-secondary btn-lg">新建</button>
+                  </a>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+        <!-- /.container-fluid -->
+    </section>
+
+
+
+    <!-- Main content -->
+    <section class="content">
+
+      <!-- Default box -->
+      <div class="card mycard">
+        <div class="card-body p-0">
+          <table class="table table-striped projects">
+              <thead>
+                  <tr>
+                      <th style="width: 1%">
+                          #
+                      </th>
+                      <th style="width: 20%">
+                          项目名称
+                      </th>
+                      <th>
+                          项目描述
+                      </th>
+                      <th style="width: 8%" class="text-center">
+                          状态
+                      </th>
+                      <th style="width: 20%">
+                      </th>
+                  </tr>
+              </thead>
+
+              {% for post in posts %}
+              <tbody>
+                  <tr>
+                      <td>
+                          #
+                      </td>
+                      <td>
+                          <a>
+                              {{ post.title }}
+                          </a>
+                          <br/>
+                          <small>
+                              Created {{ post.publish.date }}
+                          </small>
+                      </td>
+                      <td class="project_progress">
+                          <a>
+                              {{ post.body|safe|striptags|truncatechars:100 }}
+                          </a>
+
+                      </td>
+                      
+                      <td class="project-state">
+                          <span class="badge badge-success">{{ post.status }}</span>
+                      </td>
+                      
+                      
+                      
+                      <td class="project-actions text-right">
+                          <a class="btn btn-primary btn-sm" href ="{{post.get_absolute_url}}">
+                              <i class="fas fa-folder">
+                              </i>
+                              View
+                          </a>  
+                          
+                          <a class="btn btn-danger btn-sm" onclick="window.location = '{% url 'dataapp:post_delete' post.id %}' " herf="###">
+                            <i class="fas fa-trash">
+                            </i>
+                            Delete
+                          </a>
+                      </td> 
+                  </tr>
+
+              </tbody>
+              {% endfor %}
+          </table>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+
+    </section>
+
+
+{% endblock content %}

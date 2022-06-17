@@ -1,0 +1,92 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>数据合规{% block title %}{% endblock title %}</title>
+
+    <!-- Bootstrap CSS-->
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet"  crossorigin="anonymous">
+
+    <!-- static file -->
+    <link href="{% static "/css/style.css" %}" rel="stylesheet">
+     <!-- highlight js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/monokai-sublime.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- 导航栏-->
+    <link rel="icon" type="image/x-icon" href="{% static "/img/favicon.ico" %}" />
+        <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="{% static "/css/freestyles.css" %}" rel="stylesheet" >
+
+
+    <!--注册登录-->
+    <!-- Font Icon -->
+    <link rel="stylesheet" href="/static/fonts/material-icon/css/material-design-iconic-font.min.css">
+    <!-- Main css -->
+    <link rel="stylesheet" href="{% static "/css/loginstyle.css" %}" >
+
+</head>
+
+
+<body>
+
+  <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light" id="mainNav"  >
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="/">Data Compliance</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/">主页</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="#">关于</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/login/">登录</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="#">退出</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+
+<!--   Page Header-->
+        <div class="my-page-header">
+            <header class="masthead" >
+
+            </header>
+
+        </div>
+
+        <main >
+                    {% block content %}
+
+                    {% endblock content %}
+        </main>
+
+
+
+
+
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="/static/bootstrap/js/bootstrap.bundle.min.js"  crossorigin="anonymous"></script>
+
+    <script src="/static/js/scripts.js"></script>
+
+    <!--注册登录-->
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/main.js"></script>
+
+</body>
+</html>
