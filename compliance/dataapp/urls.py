@@ -15,4 +15,5 @@ urlpatterns=[
     path('post_list/<slug:post>/generate_report/',views.generate_report,name='generate_report'),
     path('new_post/', views.MainView.as_view(), name="upload-view"),
     path('new_post/upload/', views.file_upload_view, name="upload_view"),
+    path('upload/text',views.UploadText,name="upload_text"),
     ]

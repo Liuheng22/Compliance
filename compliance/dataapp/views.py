@@ -1,3 +1,4 @@
+import json
 import numbers
 from django.shortcuts import render, redirect,  get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -293,3 +294,19 @@ def generate_report(request,post):
     return render(request,"generate_report.html",{'post':post})
 
 
+def UploadText(request):
+    if request.method != "POST":
+        return JsonResponse({'msg':'BAD request'})
+    content = json.loads(request.body)
+    content = content['data']
+    newcontent = []
+    print(type(content[0]))
+    for row in content:
+        newcontent.append(HandleRow(row))
+    return JsonResponse({"data":newcontent})
+
+def HandleRow(row):
+    newrow = row.copy()
+    problems = []
+    
+    return row

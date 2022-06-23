@@ -71,3 +71,12 @@ class Operation(models.Model):
 
     def __str__(self):
         return self.content
+
+'''测试数据'''
+class TestData(models.Model):
+    key = models.CharField(max_length=50)
+    name = models.CharField(max_length=100)
+    age = models.IntegerField()
+    phone = models.CharField(max_length=100)
+    address = models.CharField(max_length=100)
+    cid = models.CharField(max_length=100)
