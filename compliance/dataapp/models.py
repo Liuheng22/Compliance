@@ -1,3 +1,4 @@
+import json
 from django.db import models
 from django.utils import timezone
 from django.urls import reverse
@@ -80,3 +81,45 @@ class TestData(models.Model):
     phone = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
     cid = models.CharField(max_length=100)
+
+'''问题'''
+class Problem(models.Model):
+    pid = models.IntegerField()
+    col = models.CharField(max_length=50)
+    seriousness = models.CharField(max_length=50)
+    ptype = models.CharField(max_length=50)
+    description = models.CharField(max_length=200)
+    fix = models.CharField(max_length=200)
+
+    def __init__(self,pid_,col_,seriousness_,ptype_,description_,fix_=""):
+        self.pid = pid_
+        self.col = col_
+        self.seriousness = seriousness_
+        self.ptype = ptype_
+        self.description = description_
+        self.fix = fix_
+
+class ProblemEncoder(json.JSONEncoder):
+    def default(self,obj):
+        # 将类转换成dict
+        d = {}
+        d['__class__'] = obj.__class__.__name__
+        d['__module__'] = obj.__module__
+        d.update(obj.__dict__)
+        return d
+
+class ProblemDecoder(json.JSONDecoder):
+    def __init__(self):
+        json.JSONDecoder.__init__(self,object_hook=self.dict2object)
+    def dict2object(self,d):
+        # 转化dict为类
+        if '__class__' in d:
+            class_name = d.pop('__class__')
+            module_name = d.pop('__module__')
+            module = __import__(module_name)
+            class_ = getattr(module,class_name)
+            args = dict((key.encode('ascii'),value) for key,value in d.items())
+            inst = class_(**args)
+        else:
+            inst = d
+        return inst

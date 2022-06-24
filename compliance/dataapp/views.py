@@ -1,9 +1,11 @@
+from calendar import c
 import json
 import numbers
+import string
 from django.shortcuts import render, redirect,  get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import UserForm, PostForm, RegisterForm
-from .models import Post, User, Operation
+from .models import Post, Problem, ProblemEncoder, User, Operation
 from django.views.generic import TemplateView
 from django.http import HttpResponse, JsonResponse
 from slugify import slugify
@@ -301,12 +303,186 @@ def UploadText(request):
     content = content['data']
     newcontent = []
     print(type(content[0]))
+    index = 0
     for row in content:
-        newcontent.append(HandleRow(row))
+        [newrow,index] = HandleRow(row,index)
+        newcontent.append(newrow)
     return JsonResponse({"data":newcontent})
 
-def HandleRow(row):
+def HandleRow(row,index):
     newrow = row.copy()
     problems = []
+
+    # 处理名字
+    nameresp = []
+    if 'name' in row:
+        nameresp = HandleName(row['name'],index+len(problems))
+    else:
+        nameresp = HandleName("",index+len(problems))
+    problems.extend(nameresp)
+
+    # 处理电话
+    phoneresp = []
+    if 'phone' in row:
+        phoneresp = HandlePhone(row['phone'],index+len(problems))
+    else:
+        phoneresp = HandlePhone("",index+len(problems))
+    problems.extend(phoneresp)
+
+    # 处理address问题
+    addressresp = []
+    if 'address' in row:
+        addressresp = HandleAddress(row['address'],index+len(problems))
+    else:
+        addressresp = HandleAddress("",index+len(problems))
+    problems.extend(addressresp)
+
+    # id问题
+    idresp = []
+    if 'ID' in row:
+        idresp = HandleId(row['ID'],index+len(problems))
+    else:
+        idresp = HandleId("",index+len(problems))
+    problems.extend(idresp)
+
+
+
+    newrow['problems'] = problemencode(problems)
+    index += len(problems)
+
+    return [newrow,index]
+
+# 处理名字
+def HandleName(name,index):
+    # 名字问题
+    problems = []
+    print(len(name))
+    if len(name) <= 0:
+        problems.append(Problem(index+len(problems),"Name","normal","完整性","缺少姓名信息",""))
+        return problems
+    # print(problems[0].description,flush=True)
+    # 名字隐私性
+    count = name.count("*")
+    firstindex = name.find('*')
+    # 有隐蔽，没问题
+    if count > 0 and firstindex > 0:
+        return problems
     
-    return row
+    #隐蔽性出现问题，构建新的name
+    newname = ""
+    newname += name[0]
+    newname += '*'
+    if len(name) > 2:
+        newname = newname + name[-1]
+    problems.append(Problem(index+len(problems),"Name","risky","隐私性","具体姓名需要隐去",newname))
+    print(problems[0].pid)
+    return problems
+
+#处理电话
+def HandlePhone(phone,index):
+    # 电话问题
+    problems = []
+    # 电话缺失
+    if len(phone) == 0:
+        problems.append(Problem(index+len(problems),"Phone","caution","完整性","缺少电话信息",""))
+        return problems
+    
+    # 电话位数
+    if len(problems) != 11:
+        problems.append(Problem(index+len(problems),"Phone","critical","规范性","phone格式与常规不符,且具体电话号码需隐去"))
+        return problems
+    
+    # 电话隐私问题
+    # 找****的位置
+    # 找是否有****
+    count = phone.count("****")
+    firstindex = phone.find("****")
+    cnt = phone.count("*")
+
+    # 没有隐私问题
+    if count == 1 and firstindex == 3:
+        return problems
+
+    if cnt != 0:
+        problems.append(Problem(index+len(problems),"Phone","risky","规范性","phone的加密格式不对,有泄露隐私风险")) 
+        return problems
+
+    #没有加密，生成正确phone
+    newphone = phone[0:3] + "****" + phone[7:] 
+    problems.append(Problem(index+len(problems),"Phone","critical","隐私性","根据国家法律法规,具体电话号码需要加密",newphone))
+
+    return problems  
+
+# 处理地址问题
+def HandleAddress(address,index):
+    # 地址问题处理
+    problems = []
+
+    # 地址缺失
+    if len(address) == 0:
+        problems.append(Problem(index+len(problems),"Address","caution","完整性","缺少地址信息",""))
+        return problems
+    
+    if len(address) <= 6:
+        problems.append(Problem(index+len(problems),"Address","caution","完整性","缺少完整的地址信息"))
+        return problems
+
+    # 地址隐私问题
+    count = address.count("****")
+    firstindex = address.find("****")
+    cnt = address.count("*")
+
+    if count == 1 and firstindex == len(address) - 4:
+        return problems
+    
+    if cnt != 0:
+        problems.append(Problem(index+len(problems),"Address","caution","规范性","address的加密格式不对,需加密具体门牌"))
+        return problems
+    
+    # address没加隐私
+    # 正确的address加密格式
+    newaddress = address[0:len(address)-6] + "****"
+    problems.append(Problem(index+len(problems),"Address","critical","隐私性","具体门牌号可能带来风险,建议隐去",newaddress))
+
+    return problems
+
+# 处理id问题
+def HandleId(pid,index):
+    # id问题
+    problems = []
+
+    # 缺少身份证信息
+    if len(pid) == 0:
+        problems.append(Problem(index+len(problems),"ID","risky","完整性","缺少身份证信息"))
+        return problems
+
+    # 身份证位数不对
+    if len(pid) != 18:
+        problems.append(Problem(index+len(problems),"ID","caution","规范性","身份证格式与常规格式不符"))
+        return problems
+    
+    # 身份证隐私问题
+    count = pid.count("********")
+    firstindex = pid.find("********")
+    cnt = pid.count("*")
+
+    # 没有问题
+    if count == 1 and firstindex == 6 and cnt == 8:
+        return problems
+
+    if cnt != 0:
+        problems.append(Problem(index+len(problems),"ID","caution","规范性","身份证加密格式不正确,有安全风险"))
+        return problems
+
+    newid = pid[0:6] + "********" + pid[14:]
+    problems.append(Problem(index+len(problems),"ID","critical","隐私性","根据国家法律法规,身份证信息需要隐去",newid)) 
+    
+    return problems   
+
+def problemencode(problems):
+    newproblems = []
+    for p in problems:
+        print(p.__dict__)
+        newproblems.append(p.__dict__)
+        # newproblems.append(ProblemEncoder().encode(p))
+    return newproblems
