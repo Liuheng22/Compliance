@@ -1,0 +1,69 @@
+{% extends 'new_post.html' %}
+
+{% block title %}
+开始上传
+{% endblock title %}
+
+{% block content1 %}
+
+<!--    <form action="upload/" class="dropzone dz-clickable dz">-->
+<!--        {% csrf_token %}-->
+<!--      <div  class="dz-default dz-message">-->
+<!--         <span>Drop files here to upload</span>-->
+
+<!--      </div>-->
+<!--    </form>-->
+
+
+
+
+<form id="upload" enctype="multipart/form-data" method="POST" class="dz-clickable">
+      {% csrf_token %}
+      <input name="author" type="hidden" id="inputAuther" value=2 class="form-control">
+      <div class="form-group">
+        <label for="inputName">项目名称</label>
+        <input name="title" type="text" id="inputName" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="inputDescription">项目描述</label>
+        <textarea name="body" id="inputDescription" class="form-control" rows="4"></textarea>
+      </div>
+
+      <div  id="previewsContainer" class="dropzone dz " >
+        <div class="dz-default dz-message " id="my-btn">
+          <span>拖拽文件到此以上传</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+          <label  class="label-agree-term"><span><span></span></span>
+              {% if message %}
+                <div class="alert alert-warning">{{ message }}</div>
+              {% endif %}
+          </label>
+      </div>
+
+
+      <div class="col-12 mysubmit" >
+        <a href="/new_post/" class="btn btn-secondary">取消</a>
+        <input id="dz-submit" type="submit" value="点击新建" class="btn btn-success float-right">
+      </div>
+</form>
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

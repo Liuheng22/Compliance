@@ -1,0 +1,228 @@
+{% extends 'baseadmin.html' %}
+
+{% block title %} - 项目详情{% endblock title %}
+
+{% block content %}
+
+
+
+ <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>项目详情</h1>
+        </div>
+          <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+                <a  href="/post_list/">
+                <button type="button" class="btn btn-block btn-outline-secondary btn-lg">返回</button>
+                </a>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="content">
+    <div class="row">
+      
+      <!-- /.col -->
+
+      <div class="col-md-9 my-col-md-9">
+        <div class="card card-primary card-outline">
+          <div class="card-header">
+            <h3 class="card-title">数据</h3>
+            <div class="card-tools">
+              <div class="input-group input-group-sm">
+                <input type="text" class="form-control" placeholder="搜索">
+                <div class="input-group-append">
+                  <div class="btn btn-primary">
+                    <i class="fas fa-search"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-body p-0">
+            <div class="table-responsive mailbox-messages">
+              <table class="table table-hover table-striped" >
+                <thead>
+                  <tr>
+                    {% for i in table_head %}
+                     <th>{{i}}</th>
+                    {% endfor %}
+                  </tr>
+                </thead>
+                <tbody id="mytable">
+                <!-- --------------------------------------------------------------------------------- -->  
+
+                          
+                  {% for row in excel_data %} 
+                   
+                      <tr>
+                        <!-- <td class="mailbox-star"></td> -->
+                        {% for cell in row %}
+                        <td nowrap="nowrap">{{ cell }}</td>
+                        {% endfor %}
+                      </tr>
+                   
+                  {% endfor %}
+              
+               <!-- --------------------------------------------------------------------------------- --> 
+
+
+      
+                
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+ 
+          <div class="card-footer p-0">
+            <div class="mailbox-controls">
+              
+              <div class="float-right">
+                
+                <div class="btn-group">
+                  {% include "pagination.html" with page=excel_data %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+
+
+      <div class="col-md-3 my-col-md-3">
+        <!-- <a href="compose.html" class="btn btn-primary btn-block mb-3">点击开始合规</a> -->
+
+        <div class="card">
+          <div class="card-header"> 
+            <h3 class="card-title">
+              <i class="far fa-chart-bar"></i>
+              合规得分</h3>
+
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body p-0" style="display: block;">
+            
+              <table class="table table-bordered">
+                
+                <tbody>
+                  <tr>
+                    <td>合规性</td>
+                    <td>
+                      <div class="progress progress-xs" style="width: 80px">
+                        <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
+                      </div>
+                    </td>
+                    <td><span class="badge bg-danger" style="width: 40px">55%</span></td>
+                  </tr>
+                  <tr>
+                    <td>隐私性</td>
+                    <td>
+                      <div class="progress progress-xs">
+                        <div class="progress-bar bg-warning" style="width: 70%"></div>
+                      </div>
+                    </td>
+                    <td><span class="badge bg-warning" style="width: 40px">70%</span></td>
+                  </tr>
+                  <tr>
+                    <td>完整性</td>
+                    <td>
+                      <div class="progress progress-xs progress-striped active">
+                        <div class="progress-bar bg-primary" style="width: 30%"></div>
+                      </div>
+                    </td>
+                    <td><span class="badge bg-primary" style="width: 40px">30%</span></td>
+                  </tr>
+                  <tr>
+                    <td>规范性</td>
+                    <td>
+                      <div class="progress progress-xs progress-striped active">
+                        <div class="progress-bar bg-success" style="width: 90%"></div>
+                      </div>
+                    </td>
+                    <td><span class="badge bg-success" style="width: 40px">90%</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+
+        
+
+
+
+        <div class="card">
+          
+            
+              <div class="card-header">
+                <h3 class="card-title">
+                  <i class="fas fa-bullhorn"></i>
+                  合规建议
+                </h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <div class="callout callout-danger">
+                  <div style="justify-content: space-between;display: flex;">
+                    <h5 id="high-level">高风险</h5>
+                    <button style="border:none" id="handel-high-level">
+                      <i class="far fa-circle text-danger"></i>
+                      Fix
+                    </button >
+                  </div>
+
+                  <p>含有未经技术处理的直接标识符，包括但不限于手机号、身份证号、银行卡号等，建议处理！</p>
+                </div>
+                
+                <div class="callout callout-warning">
+                  <h5 id="middle-level">中风险</h5>
+
+                  <p>不含有直接标识符但含有准标识符，包括但不限于住址、IP地址、生日等，建议处理！</p>
+                </div>
+                <div class="callout callout-success">
+                  <h5>低风险</h5>
+
+                  <p>含有经过技术处理的直接标识符，但重识别率低，如统计信息等，建议处理</p>
+                </div>
+              </div>
+              <!-- /.card-body -->
+            
+            <!-- /.card -->
+          
+        </div>
+
+        <a href="{{post.get_absolute_url}}generate_report/" class="btn btn-primary btn-block mb-3">生成合规报告</a>
+      </div>
+
+
+
+
+    </div>
+  </section>
+
+
+
+{% endblock content %}  

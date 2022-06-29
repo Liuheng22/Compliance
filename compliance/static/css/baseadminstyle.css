@@ -1,0 +1,47 @@
+.dz {
+    border: dashed !important;
+    border-color: #ccc !important;
+    /*border-right: 7px !important;*/
+    margin-bottom: 1.5rem !important;
+}
+
+.dz:hover {
+    background-color: aliceblue !important;
+}
+
+.mycard {
+    margin-bottom: 0rem !important;
+}
+
+.mycontent {
+    padding-left: 3rem !important;
+    padding-right: 3rem !important;
+}
+
+.mypage {
+    margin-top: 0 !important;
+
+}
+
+/* 设置flex box的item宽度 */
+.my-col-md-9 {
+    flex:0 0 60% !important;
+    max-width: 60% !important;
+}
+.my-col-md-3 {
+    flex: 0 0 40% !important;
+    max-width: 40% !important;
+}
+
+
+
+.high-level-light {
+    background: rgb(236, 58, 58);
+    background-clip:content-box;
+  }
+
+ 
+.middle-level-light {
+    background: #ffc107;
+    background-clip:content-box;
+  }
